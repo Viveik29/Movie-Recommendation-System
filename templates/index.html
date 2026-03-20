@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Recommender</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      text-align: center;
+      margin: 0;
+    }
+
+    h1 {
+      color: #ff8c00;
+      margin-top: 20px;
+    }
+
+    form {
+      margin: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 260px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: #ff8c00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ff4500;
+    }
+
+    /* ✅ Error box */
+    .error-box {
+      margin: 15px auto;
+      padding: 12px;
+      width: 300px;
+      background: #ff4d4d;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+
+    /* Optional message */
+    .info-msg {
+      color: #ccc;
+      margin-top: 10px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-bottom: 30px;
+    }
+
+    .card {
+      background: #1c1c1c;
+      margin: 15px;
+      padding: 10px;
+      width: 220px;
+      border-radius: 10px;
+      border: 2px solid orange;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px orange;
+    }
+
+    img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .stars {
+      color: gold;
+      margin: 5px 0;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #ccc;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<h1>🎬 Movie Recommender System</h1>
+
+<form method="POST">
+  <input type="text" name="movie" placeholder="Enter movie name..." required>
+  <button type="submit">Recommend</button>
+</form>
+
+<!-- ✅ ERROR DISPLAY -->
+{% if error %}
+  <div class="error-box">
+    ❌ {{ error }}
+  </div>
+{% endif %}
+
+<!-- ✅ INITIAL MESSAGE -->
+{% if not recommendations and not error %}
+  <p class="info-msg">Search for a movie to get recommendations 🎥</p>
+{% endif %}
+
+<div class="container">
+
+  {% for movie in recommendations %}
+  <div class="card">
+
+    <img src="{{ movie.poster }}" alt="poster">
+
+    <div class="title">{{ movie.title }}</div>
+
+    <div class="stars">
+      {% for i in range((movie.rating / 2)|int) %} ★ {% endfor %}
+      {% for i in range(5 - (movie.rating / 2)|int) %} ☆ {% endfor %}
+    </div>
+
+    <div class="info">⭐ {{ movie.rating }}/10</div>
+    <div class="info">📊 Popularity: {{ movie.popularity }}</div>
+    <div class="info">🎯 {{ movie.genres }}</div>
+
+  </div>
+  {% endfor %}
+
+</div>
+
+</body>
+</html>
