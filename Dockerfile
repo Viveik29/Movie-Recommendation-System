@@ -1,17 +1,23 @@
-# Use lightweight Python image
-FROM python:3.10-slim
+# Dockerfile
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy files
-COPY . /app
+# Copy requirements first (allows caching)
+COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir flask pandas scikit-learn
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port
-EXPOSE 5000
+# Copy the rest of the project
+COPY . .
 
-# Run app
+# Ensure Python can find your modules
+ENV PYTHONPATH=/app
+
+# Expose the port for your app
+EXPOSE 8000
+
+# Run your app
 CMD ["python", "app.py"]

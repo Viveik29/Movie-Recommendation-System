@@ -228,10 +228,20 @@ def validate_input(movie):
 
 #     return recs
 def recommend_with_posters(movie, movies, similarity):
-    if movie not in movies['title'].values:
+    movie = movie.strip().lower()
+
+    # Create lowercase column (do once ideally outside function)
+    movies['title_lower'] = movies['title'].str.lower()
+
+    # Find matching movie
+    matched = movies[movies['title_lower'] == movie]
+
+    if matched.empty:
         return []
 
-    idx = movies[movies['title'] == movie].index[0]
+    idx = matched.index[0]
+
+    # Get similarity scores
     sim_scores = list(enumerate(similarity[idx]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:11]
 
@@ -255,8 +265,8 @@ def home():
     error = None
 
     if request.method == 'POST':
-        movie = request.form.get('movie', '').strip()
-        error = validate_input(movie)
+        movie = request.form.get('movie', '').strip().lower()
+        error = validate_input(movie.lower())
 
         if not error:
             try:

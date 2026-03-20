@@ -1,6 +1,8 @@
 
 🎬 Movie Recommendation System
 
+![alt text](image-2.png)
+
 A web-based movie recommendation system built with Flask that provides movie suggestions based on similarity and displays movie posters and ratings. Includes both Web UI and REST API.
 
 Table of Contents
@@ -168,6 +170,9 @@ Body (raw → JSON):
 }
 
 Click Send → check JSON response---
+![alt text](image.png)
+
+![alt text](image-1.png)
 
 ## 👨‍💻 Author
 
