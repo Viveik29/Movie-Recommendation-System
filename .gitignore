@@ -2,3 +2,7 @@ movies_metadata.csv
 movies_with_posters.csv
 tmdb_5000_credits.csv
 tmdb_5000_movies.csv
+models/
+similarity_.pkl
+.env/
+movie_list_.pkl

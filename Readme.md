@@ -1,151 +1,173 @@
 
-# 🎬 Movie Recommender System (Flask + ML + Docker)
+🎬 Movie Recommendation System
 
-A content-based movie recommendation system built using **Machine Learning (NLP)** and deployed with **Flask & Docker**.
-It suggests similar movies based on user input using cosine similarity.
+A web-based movie recommendation system built with Flask that provides movie suggestions based on similarity and displays movie posters and ratings. Includes both Web UI and REST API.
 
----
+Table of Contents
 
-## 🚀 Features
+Project Overview
 
-* 🔍 Search any movie and get top 5 recommendations
-* 🧠 Content-based filtering using NLP (CountVectorizer)
-* ⚡ Fast similarity computation using cosine similarity
-* 🌐 Interactive UI using HTML/CSS
-* 🐳 Dockerized for easy deployment
-* 🔐 Environment-based configuration using `.env`
+Features
 
----
+Directory Structure
 
-## 🧠 How It Works
+Setup & Installation
 
-1. Movie data is preprocessed and combined into a `tags` column
-2. Text data is vectorized using **CountVectorizer**
-3. Cosine similarity is computed between all movies
-4. Based on input movie, similar movies are recommended
+Data Preparation
 
----
+Backend Details
 
-## 📂 Project Structure
+Frontend Details
 
-```
-movie-recommender/
-│
-├── app.py
-├── movie_list.pkl
-├── similarity.pkl
-├── requirements.txt
-├── Dockerfile
-├── .env
-├── .gitignore
-│
-└── templates/
-    └── index.html
-```
+API Usage
 
----
+Testing API
 
-## ⚙️ Installation (Local Setup)
+Screenshots
 
-### 1. Create environment (Recommended: Conda)
+Future Improvements
 
-```
-conda create -n movie-reco python=3.10 -y
-conda activate movie-reco
-```
+Project Overview
 
-### 2. Install dependencies
+This project recommends movies based on similarity (using a precomputed similarity matrix) and displays:
 
-```
+Movie poster (from CSV or placeholder if missing)
+
+Movie rating (vote_average)
+
+Movie title
+
+The system has:
+
+A Flask Web UI for entering a movie name and viewing recommendations
+
+A REST API endpoint (/api/recommend) for JSON-based requests
+
+Features
+
+Recommend top 10 similar movies
+
+Display movie poster, title, and rating
+
+Input validation (empty, short, or long movie names)
+
+Handles missing posters with a placeholder
+
+API compatible with Postman / cURL / Python requests
+
+Directory Structure
+movie-recommendation/
+├── app.py                 # Flask main app
+├── routes.py              # Optional blueprint routes
+├── recommendation.py      # Recommendation logic + model loading
+├── models/
+│   ├── movie_list.pkl     # Preprocessed movie DataFrame
+│   └── similarity.pkl     # Similarity matrix (pickle)
+├── templates/
+│   └── index.html         # Web UI template
+├─
+├── movies_with_posters.csv # CSV containing poster URLs and movie info
+├── README.md
+├── requirements.txt       # Python dependencies
+Setup & Installation
+
+Clone the repo
+
+git clone <repo_url>
+cd movie-recommendation
+
+Create virtual environment
+
+python -m venv venv
+source venv/bin/activate        # Linux / macOS
+venv\Scripts\activate           # Windows
+
+Install dependencies
+
 pip install -r requirements.txt
-```
+Data Preparation
 
-### 3. Run the app
+movies_with_posters.csv must contain the following columns:
 
-```
-python app.py
-```
+id,title,poster_url,vote_average,... (other optional columns)
 
-### 4. Open in browser
+movie_list.pkl contains the main movies DataFrame used for similarity lookup.
 
-```
-http://localhost:5000
-```
+similarity.pkl contains precomputed similarity matrix (e.g., cosine similarity of movie features).
 
----
+Backend Details
 
-## 🐳 Docker Setup
+app.py: Main Flask app
 
-### 1. Build Docker Image
+recommendation.py:
 
-```
-docker build -t movie-recommender .
-```
+def load_model():
+    # Load movie_list.pkl and similarity.pkl
+    # Merge poster_url from CSV
+    # Create poster_path column with placeholder for missing posters
+    return movies, similarity
 
-### 2. Run Container
+def recommend_with_posters(movie, movies, similarity):
+    # Return list of dicts:
+    # [{"title": ..., "poster_path": ..., "rating": ...}, ...]
 
-```
-docker run -p 5001:5000 movie-recommender
-```
+Input validation: checks empty, short (<2), or long (>100) movie names
 
-### 3. Open in browser
+Frontend Details
 
-```
-http://localhost:5001
-```
+HTML template: templates/index.html
 
----
+Loops through recommendations and displays:
 
-## ☁️ Push to Docker Hub
+{% for rec in recommendations %}
+<div class="movie-card">
+    <img src="{{ rec.poster_path }}" alt="{{ rec.title }}" width="150">
+    <p>{{ rec.title }}</p>
+    <p>Rating: {{ rec.rating }}</p>
+</div>
+{% endfor %}
 
-```
-docker tag movie-recommender <your-username>/movie-recommender:latest
-docker push <your-username>/movie-recommender:latest
-```
+Works with poster_path from backend, using placeholder if missing
 
----
+API Usage
 
-## 🔐 Environment Variables
+Endpoint: /api/recommend
+Method: POST
+Content-Type: application/json
 
-Create a `.env` file:
+Request Example:
 
-```
-FLASK_ENV=development
-SECRET_KEY=your_secret_key
-PORT=5000
-```
+{
+  "movie": "Inception"
+}
 
----
+Response Example:
 
-## 📊 Tech Stack
+{
+  "status": "success",
+  "movie": "Inception",
+  "recommendations": [
+    {"title": "Interstellar", "poster_path": "https://...", "rating": 8.6},
+    {"title": "Tenet", "poster_path": "https://...", "rating": 7.8},
+    ...
+  ]
+}
+Testing API
+1. Using Postman Web
 
-* **Python**
-* **Flask**
-* **Scikit-learn**
-* **Pandas**
-* **NLP (CountVectorizer)**
-* **Docker**
+Open https://web.postman.co
 
----
+New POST request → URL: http://localhost:5000/api/recommend
 
-## 🎯 Future Improvements
+Headers: Content-Type: application/json
 
-* 🎬 Add movie posters (TMDB API)
-* 🔍 Autocomplete search
-* ⭐ Show ratings & metadata
-* 🤖 Upgrade to GenAI-based recommendations (RAG + LLM)
-* ☁️ Deploy on AWS / Kubernetes
+Body (raw → JSON):
 
----
+{
+  "movie": "Inception"
+}
 
-## 🧠 Learnings
-
-* Built end-to-end ML pipeline
-* Implemented cosine similarity for recommendations
-* Containerized application using Docker
-* Learned deployment and environment management
-
----
+Click Send → check JSON response---
 
 ## 👨‍💻 Author
 
