@@ -1,5 +1,11 @@
 
-🎬 Movie Recommendation System
+🎬 Movie Recommendation System  
+https://hub.docker.com/repository/docker/viveik16693/movie-recommender/tags 
+docker pull viveik16693/movie-recommender:latestv1  -->Pull this image having latest changes
+docker run -p 8000:5000 viveik16693/movie-recommender:latestv1 -->Run Cmd in local PC to for container execution.
+http://127.0.0.1:8000/ -->Try local host
+<img width="1136" height="447" alt="image" src="https://github.com/user-attachments/assets/9c7be60c-d818-4ca4-aefd-76e23e1d7797" />
+
 
 ![alt text](image-2.png)
 
